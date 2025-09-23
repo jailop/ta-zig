@@ -32,8 +32,9 @@ ma.update(3.0);
 try std.testing.expectApproxEqAbs(2.0, ma.curr(), 1e-9);
 // Updating the moving average with a new value
 ma.update(4.0);
-// Now the moving average is [4.0](4.0)
+// Now the moving average is 3.0
 try std.testing.expectApproxEqAbs(3.0, ma.curr(), 1e-9);
 // Retrieving the moving average for t-1 (previous value)
+// Past values are indexed by backward positive integers
 try std.testing.expectApproxEqAbs(2.0, ma.get(1), 1e-9);
 ```
