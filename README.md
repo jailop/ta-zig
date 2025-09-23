@@ -12,10 +12,10 @@ analysis indicators for streaming data:
 
 This implementation, based on circular lists, keeps just a window of
 values for an indicator, including the current one and a few past ones.
-When new data is pushed, the indicator is updated, and older data
-exceeding the memory size is forgotten. This implementation avoids
-recomputing the indicator over all the values every time it's updated,
-making it highly CPU and memory efficient.
+When new data is pushed, the indicator is updated and older values
+exceeding the memory size are forgotten. Input data is not stored. This
+implementation avoids recomputing the indicator over all the data inputs
+every time it's updated, making it highly CPU and memory efficient.
 
 
 Example:
