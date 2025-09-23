@@ -14,7 +14,7 @@ This implementation, based on circular lists, keeps just a window of
 values for an indicator, including the current one and a few past ones.
 When new data is pushed, the indicator is updated and older values
 exceeding the memory size are forgotten. Input data is not stored. This
-implementation avoids recomputing the indicator over all the data inputs
+implementation avoids recomputing the indicator over all the input data
 every time it's updated, making it highly CPU and memory efficient.
 
 
