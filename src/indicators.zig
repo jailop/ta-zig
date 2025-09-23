@@ -1,11 +1,15 @@
 const std = @import("std");
+const nan = std.math.nan(f64);
 
 pub fn Indicator(T: type, nan_value: T, size: usize) type {
     return struct {
+
         data: [size]T = [_]T{nan_value} ** size,
         pos: usize = 0,
 
-        pub fn push(self: *Indicator(T, nan_value, size), value: T) void {
+        const Self = @This();
+
+        pub fn push(self: *Self, value: T) void {
             if (self.pos == 0) {
                 self.pos = size;
             }
@@ -13,14 +17,14 @@ pub fn Indicator(T: type, nan_value: T, size: usize) type {
             self.data[self.pos] = value;
         }
         
-        pub fn get(self: *const Indicator(T, nan_value, size), offset: usize) T {
+        pub fn get(self: Self, offset: usize) T {
             if (offset >= size) {
                 return nan_value;
             }
             return self.data[(self.pos + offset) % size];
         }
 
-        pub fn curr(self: *const Indicator(T, nan_value, size)) T {
+        pub fn curr(self: Self) T {
             return self.data[self.pos];
         }
     };
@@ -28,13 +32,15 @@ pub fn Indicator(T: type, nan_value: T, size: usize) type {
 
 pub fn SMAvg(periods: usize, mem_size: usize) type {
     return struct {
-        data: Indicator(f64, std.math.nan(f64), mem_size) = Indicator(f64, std.math.nan(f64), mem_size){},
-        prev_values: [periods]f64 = [_]f64{std.math.nan(f64)} ** periods,
+        data: Indicator(f64, nan, mem_size) = Indicator(f64, nan, mem_size){},
+        prev_values: [periods]f64 = [_]f64{nan} ** periods,
         pos: usize = 0,
         length: usize = 0,
         sum: f64 = 0.0,
+
+        const Self = @This();
         
-        pub fn update(self: *SMAvg(periods, mem_size), value: f64) void {
+        pub fn update(self: *Self, value: f64) void {
             if (self.length < periods) {
                 self.length += 1;
             } else {
@@ -50,11 +56,11 @@ pub fn SMAvg(periods: usize, mem_size: usize) type {
             }
         }
 
-        pub inline fn curr(self: *const SMAvg(periods, mem_size)) f64 {
+        pub inline fn curr(self: Self) f64 {
             return self.data.curr();
         }
 
-        pub inline fn get(self: *const SMAvg(periods, mem_size), offset: usize) f64 {
+        pub inline fn get(self: Self, offset: usize) f64 {
             return self.data.get(offset);
         }
 
@@ -63,14 +69,16 @@ pub fn SMAvg(periods: usize, mem_size: usize) type {
 
 pub fn SMVar(periods: usize, dof: u8, mem_size: usize) type {
     return struct {
-        data: Indicator(f64, std.math.nan(f64), mem_size) = Indicator(f64, std.math.nan(f64), mem_size){},
+        data: Indicator(f64, nan, mem_size) = Indicator(f64, nan, mem_size){},
         ma: SMAvg(periods, 1) = SMAvg(periods, 1){},
-        prev_values: [periods]f64 = [_]f64{std.math.nan(f64)} ** periods,
+        prev_values: [periods]f64 = [_]f64{nan} ** periods,
         pos: usize = 0,
         length: usize = 0,
         sum: f64 = 0.0,
 
-        pub fn update(self: *SMVar(periods, dof, mem_size), value: f64) void {
+        const Self = SMVar(periods, dof, mem_size);
+
+        pub fn update(self: *Self, value: f64) void {
             if (self.length < periods) {
                 self.length += 1;
             }
@@ -89,11 +97,11 @@ pub fn SMVar(periods: usize, dof: u8, mem_size: usize) type {
             }
         }
 
-        pub inline fn curr(self: *const SMVar(periods, dof, mem_size)) f64 {
+        pub inline fn curr(self: Self) f64 {
             return self.data.curr();
         }
 
-        pub inline fn get(self: *const SMVar(periods, dof, mem_size), offset: usize) f64 {
+        pub inline fn get(self: Self, offset: usize) f64 {
             return self.data.get(offset);
         }
     };
@@ -101,17 +109,20 @@ pub fn SMVar(periods: usize, dof: u8, mem_size: usize) type {
 
 pub fn SMStdDev(periods: usize, dof: u8, mem_size: usize) type {
     return struct {
-        variance: SMVar(periods, dof, mem_size) = SMVar(periods, dof, mem_size){},
+        variance: SMVar(periods, dof, mem_size) =
+            SMVar(periods, dof, mem_size){},
+
+        const Self = SMStdDev(periods, dof, mem_size);
                   
-        pub inline fn update(self: *SMStdDev(periods, dof, mem_size), value: f64) void {
+        pub inline fn update(self: *Self, value: f64) void {
             self.variance.update(value);
         }
 
-        pub inline fn curr(self: *const SMStdDev(periods, dof, mem_size)) f64 {
+        pub inline fn curr(self: Self) f64 {
             return std.math.sqrt(self.variance.curr());
         }
 
-        pub inline fn get(self: *const SMStdDev(periods, dof, mem_size), offset: usize) f64 {
+        pub inline fn get(self: Self, offset: usize) f64 {
             return self.data.get(offset);
         }
     };
@@ -119,11 +130,13 @@ pub fn SMStdDev(periods: usize, dof: u8, mem_size: usize) type {
 
 pub fn EMAvg(periods: usize, smoothing: f64, mem_size: usize) type {
     return struct {
-        data: Indicator(f64, std.math.nan(f64), mem_size) = Indicator(f64, std.math.nan(f64), mem_size){},
+        data: Indicator(f64, nan, mem_size) = Indicator(f64, nan, mem_size){},
         prev_value: f64 = 0.0,
         length: usize = 0,
 
-        pub fn update(self: *EMAvg(periods, smoothing, mem_size), value: f64) void {
+        const Self = EMAvg(periods, smoothing, mem_size);
+
+        pub fn update(self: *Self, value: f64) void {
             self.length += 1;
             if (self.length < periods) {
                 self.prev_value += value;
@@ -138,11 +151,11 @@ pub fn EMAvg(periods: usize, smoothing: f64, mem_size: usize) type {
             }
         }
 
-        pub inline fn curr(self: *const EMAvg(periods, smoothing, mem_size)) f64 {
+        pub inline fn curr(self: Self) f64 {
             return self.data.curr();
         }
 
-        pub inline fn get(self: *const EMAvg(periods, smoothing, mem_size), offset: usize) f64 {
+        pub inline fn get(self: Self, offset: usize) f64 {
             return self.data.get(offset);
         }
     };
@@ -150,21 +163,27 @@ pub fn EMAvg(periods: usize, smoothing: f64, mem_size: usize) type {
 
 pub fn ATR(periods: usize, mem_size: usize) type {
     return struct {
+
         data: SMAvg(periods, mem_size) = SMAvg(periods, mem_size){},
 
-        pub fn update(self: *ATR(periods, mem_size), high: f64, low: f64, close: f64) void {
+        const Self = ATR(periods, mem_size);
+
+        pub fn update(self: *Self, high: f64, low: f64, close: f64) void {
             const high_low = high - low;
             const high_close = if (high > close) high - close else close - high;
             const low_close = if (low > close) low - close else close - low;
-            const tr = if (high_low > high_close and high_low > low_close) high_low else if (high_close > low_close) high_close else low_close;
+            const tr = 
+                if (high_low > high_close and high_low > low_close) high_low
+                else if (high_close > low_close) high_close
+                else low_close;
             self.data.update(tr);
         }
 
-        pub inline fn curr(self: *const ATR(periods, mem_size)) f64 {
+        pub inline fn curr(self: Self) f64 {
             return self.data.curr();
         }
 
-        pub inline fn get(self: *const ATR(periods, mem_size), offset: usize) f64 {
+        pub inline fn get(self: Self, offset: usize) f64 {
             return self.data.get(offset);
         }
     };
@@ -172,11 +191,14 @@ pub fn ATR(periods: usize, mem_size: usize) type {
 
 pub fn RSI(periods: usize, mem_size: usize) type {
     return struct {
+
         gains: SMAvg(periods, 1) = SMAvg(periods, 1){},
         losses: SMAvg(periods, 1) = SMAvg(periods, 1){},
-        data: Indicator(f64, std.math.nan(f64), mem_size) = Indicator(f64, std.math.nan(f64), mem_size){},
+        data: Indicator(f64, nan, mem_size) = Indicator(f64, nan, mem_size){},
 
-        pub fn update(self: *RSI(periods, mem_size), open_price: f64, close_price: f64) void {
+        const Self = RSI(periods, mem_size);
+
+        pub fn update(self: *Self, open_price: f64, close_price: f64) void {
             const diff = close_price - open_price;
             if (diff > 0) {
                 self.gains.update(diff);
@@ -188,16 +210,17 @@ pub fn RSI(periods: usize, mem_size: usize) type {
             if (std.math.isNan(self.losses.curr())) {
                 self.data.push(std.math.nan(f64));
             } else {
-                const rsi = 100.0 - (100.0 / (1.0 + (self.gains.curr() / self.losses.curr())));
+                const rsi = 100.0 -
+                    (100.0 / (1.0 + (self.gains.curr() / self.losses.curr())));
                 self.data.push(rsi);
             }
         }
 
-        pub inline fn curr(self: *const RSI(periods, mem_size)) f64 {
+        pub inline fn curr(self: Self) f64 {
             return self.data.curr();
         }
 
-        pub inline fn get(self: *const RSI(periods, mem_size), offset: usize) f64 {
+        pub inline fn get(self: Self, offset: usize) f64 {
             return self.data.get(offset);
         }
     };
