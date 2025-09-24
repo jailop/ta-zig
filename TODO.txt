@@ -1,0 +1,5 @@
+* Bollinger Bands
+* Stochastic Oscillator
+* On-Balance Volume (OBV)
+* Volume-Weighted Average Price (VWAP)
+

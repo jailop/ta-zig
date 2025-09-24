@@ -3,11 +3,20 @@
 I'm just starting. At this moment I have implemented a few technical
 analysis indicators for streaming data:
 
+Trend:
+
 * Simple Moving Average (SMAvg)
+* Exponential Moving Average (EMAvg)
+* Moving Average Convergence Divergence (MACD) (new)
+
+Volatility:
+
 * Simple Moving Variance (SMVar)
 * Simple Moving Standard Deviation (SMStdDev)
-* Exponential Moving Average (EMAvg)
 * Average True Range (ATR)
+
+Momentum:
+
 * Relative Strength Index (RSI) 
 
 This implementation, based on circular lists, keeps just a window of
