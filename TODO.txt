@@ -1,3 +1,5 @@
+* Documentation
+
 * Bollinger Bands
 * Stochastic Oscillator
 * On-Balance Volume (OBV)
