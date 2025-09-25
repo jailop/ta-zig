@@ -34,8 +34,8 @@ const Order = struct {
     creationTime: i64,
     updateTime: i64,
     order_id: usize = 0,
-    symbol: []u8 = "",
-    exchange: []u8 = "",
+    symbol: []const u8 = "",
+    exchange: []const u8 = "",
     side: Side = Side.NoSide,
     orderType: OrderType = OrderType.NoOrder,
     status: OrderStatus = OrderStatus.Draft,
@@ -54,4 +54,7 @@ const Order = struct {
 test "Order" {
     const order = Order.default();
     try std.testing.expect(order.side == Side.NoSide);
+    try std.testing.expect(order.orderType == OrderType.NoOrder);
+    try std.testing.expect(order.price == 0.0);
+    try std.testing.expect(order.quantity == 0.0);
 }
