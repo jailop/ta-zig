@@ -26,6 +26,8 @@ Input data is not stored.
 When new data is pushed, the indicator is updated and older values
 exceeding the memory size are forgotten.
 
+For example, computing a moving average at each update, doesn't sum all values involved to divide them over the number of items. Instead, it is just the previous average that is updated with the new value, performing a minimal number of operations.
+
 This
 implementation avoids recomputing the indicator over all the input data
 every time it's updated. All parameters are defined at compile time. Memory is statically allocated. All these features make indicators highly CPU and memory efficient.
