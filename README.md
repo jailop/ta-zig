@@ -21,10 +21,14 @@ Momentum:
 
 This implementation, based on circular lists, keeps just a window of
 values for an indicator, including the current one and a few past ones.
+
+Input data is not stored.
 When new data is pushed, the indicator is updated and older values
-exceeding the memory size are forgotten. Input data is not stored. This
+exceeding the memory size are forgotten.
+
+This
 implementation avoids recomputing the indicator over all the input data
-every time it's updated, making it highly CPU and memory efficient.
+every time it's updated. All parameters are defined at compile time. Memory is statically allocated. All these features make indicators highly CPU and memory efficient.
 
 
 Example:
