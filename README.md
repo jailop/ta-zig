@@ -31,15 +31,15 @@ include all values involved. Instead, it just takes the previous average
 to update it with the proportion of the arriving value, performing a
 minimal number of operations. 
 
-$$\bar{MA}_{t,p} = \bar{MA}_{t-1,p} + \frac{x_t - x_{t-p}}{p}$$
+$$\text{MA}_{t,p} = \text{MA}_{t-1,p} + \frac{x_t - x_{t-p}}{p}$$
 
 Where:
 
 * $p$: Number of time points over the moving average is computed
-* $\bar{MA}_{t,p}$: Moving average for time $t$
-* $\bar{MA}_{t-1,p}$: Previous computed moving average
+* $\text{MA}_{t,p}$: Moving average for time $t$
+* $\text{MA}_{t-1,p}$: Previous computed moving average
 * $x_t$: New arriving value
-* $x_{t - p}: Value of $p$-points before, to be forgotten
+* $x_{t - p}$: Value of $p$-points before, to be forgotten
 
 
 Therefore, this implementation avoids recomputing the indicator over all
