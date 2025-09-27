@@ -76,3 +76,40 @@ try std.testing.expectApproxEqAbs(3.0, ma.curr(), 1e-9);
 // Past values are indexed by backward positive integers
 try std.testing.expectApproxEqAbs(2.0, ma.get(1), 1e-9);
 ```
+
+## Usage
+
+In your project directory, run the following command:
+
+```
+zig fetch --save "git+https://github.com/datainquiry/ta-zig#main"
+
+```
+
+Add the following sections to your `build.zig` file:
+
+```zig
+   ...
+   const ta_zig = b.dependency("ta_zig", .{
+        .target = target,
+        .optimize = optimize,
+   });
+   ...
+   exe.root_module.addImport("ta_zig", ta_zig.module("ta_zig"));
+   ...
+```
+
+In your code, you can use the library like in this example:
+
+```zig
+const std = @import("std");
+const ta = @import("ta_zig");
+
+pub fn main() !void {
+    var ma = ta.SMA(3, 1){};
+    ma.update(3.9);
+    ma.update(4.5);
+    ma.update(6.8);
+    std.debug.print("Moving average: {}\n", .{ma.curr()});
+}
+```
