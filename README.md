@@ -8,6 +8,8 @@ Trend:
 * Simple Moving Average (SMAvg)
 * Exponential Moving Average (EMAvg)
 * Moving Average Convergence Divergence (MACD) (new)
+* On-Balance Volume
+* Bollinger Bands
 
 Volatility:
 
@@ -18,6 +20,7 @@ Volatility:
 Momentum:
 
 * Relative Strength Index (RSI) 
+* Stochastic Oscilator
 
 This implementation, based on circular lists, keeps just a window of
 values for an indicator, including the current one and a few past ones.
@@ -51,8 +54,11 @@ features make indicators highly CPU and memory efficient.
 Example:
 
 ```zig
+// Number of points to include in the moving average
 const period = 3;
+// How many results should be kept in memory
 const memory_size = 5;
+// Simple Moving Average
 var ma = SMAvg(period, memory_size){};
 // Pushing a few values
 ma.update(1.0);

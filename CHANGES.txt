@@ -3,3 +3,7 @@
 * MACD indicator added
 * Source code refactored in different files
 * `ta.zig` is the entry point
+
+0.1.0 - 2025-09-27:
+
+* First version ready to use module.

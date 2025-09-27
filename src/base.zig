@@ -7,9 +7,8 @@ const std = @import("std");
 /// It is expected that other indicators use this same API
 pub fn Indicator(T: type, nan_value: T, size: usize) type {
     return struct {
-
-        data: [size]T = [_]T{nan_value} ** size,  // A circular list
-        pos: usize = 0,  // Current position
+        data: [size]T = [_]T{nan_value} ** size, // A circular list
+        pos: usize = 0, // Current position
 
         const Self = @This();
 
@@ -22,7 +21,7 @@ pub fn Indicator(T: type, nan_value: T, size: usize) type {
             self.pos -= 1;
             self.data[self.pos] = value;
         }
-       
+
         // Back values are indicated by a positive integer
         pub fn get(self: Self, offset: usize) T {
             if (offset >= size) {
@@ -55,5 +54,3 @@ test "Indicator" {
     try std.testing.expectEqual(2.0, ind.get(2));
     try std.testing.expect(std.math.isNan(ind.get(3)));
 }
-
-
