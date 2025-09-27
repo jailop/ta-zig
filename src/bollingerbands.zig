@@ -2,8 +2,8 @@ const std = @import("std");
 const nan = std.math.nan(f64);
 const sqrt = std.math.sqrt;
 const Indicator = @import("base.zig").Indicator;
-const SMAvg = @import("trend.zig").SMAvg;
-const SMStdDev = @import("volatility.zig").SMStdDev;
+const SMA = @import("trend.zig").SMA;
+const SMStd = @import("volatility.zig").SMStd;
 
 
 /// Bollinger Bands help to gauge the volitily of an asset. It is
@@ -34,9 +34,9 @@ pub fn BollingerBands(period: usize, z: f64, mem_size: usize) type {
         data: Indicator(Result, Result{}, mem_size) =
             Indicator(Result, Result{}, mem_size){},
         /// Used to compute the value of the middle band.
-        sma: SMAvg(period, 1) = SMAvg(period, 1){},
+        sma: SMA(period, 1) = SMA(period, 1){},
         /// Used to compute the value of the lower and upper bands.
-        std: SMStdDev(period, 1, 1) = SMStdDev(period, 1, 1){},
+        std: SMStd(period, 1, 1) = SMStd(period, 1, 1){},
         /// Used to check when valid values are already available.
         counter: usize = 0,
 
