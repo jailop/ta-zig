@@ -26,7 +26,14 @@ Input data is not stored.
 When new data is pushed, the indicator is updated and older values
 exceeding the memory size are forgotten.
 
-For example, computing a moving average at each update, doesn't sum all values involved to divide them over the number of items. Instead, it is just the previous average that is updated with the new value, performing a minimal number of operations.
+For example, computing a moving average at each update, doesn't sum all values involved to divide them over the number of items. Instead, it is just the previous average that is updated with the new value, performing a minimal number of operations. 
+
+$$\bar{MA}_{t,p} = \bar{MA}_{t-1,p} + \frac{x_t - x_{t-p}}{p}$$
+
+Where:
+
+* $\bar{MA}_{t,p}$: Current moving average
+
 
 This
 implementation avoids recomputing the indicator over all the input data
