@@ -26,18 +26,26 @@ Input data is not stored.
 When new data is pushed, the indicator is updated and older values
 exceeding the memory size are forgotten.
 
-For example, computing a moving average at each update, doesn't sum all values involved to divide them over the number of items. Instead, it is just the previous average that is updated with the new value, performing a minimal number of operations. 
+For example, computing a moving average at each update, it doesn't
+include all values involved. Instead, it just takes the previous average
+to update it with the proportion of the arriving value, performing a
+minimal number of operations. 
 
 $$\bar{MA}_{t,p} = \bar{MA}_{t-1,p} + \frac{x_t - x_{t-p}}{p}$$
 
 Where:
 
-* $\bar{MA}_{t,p}$: Current moving average
+* $p$: Number of time points over the moving average is computed
+* $\bar{MA}_{t,p}$: Moving average for time $t$
+* $\bar{MA}_{t-1,p}$: Previous computed moving average
+* $x_t$: New arriving value
+* $x_{t - p}: Value of $p$-points before, to be forgotten
 
 
-This
-implementation avoids recomputing the indicator over all the input data
-every time it's updated. All parameters are defined at compile time. Memory is statically allocated. All these features make indicators highly CPU and memory efficient.
+Therefore, this implementation avoids recomputing the indicator over all
+the input data every time it's updated. All parameters are defined at
+compile time. Finally, memory is only statically allocated. All these
+features make indicators highly CPU and memory efficient.
 
 
 Example:
