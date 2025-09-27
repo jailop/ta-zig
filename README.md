@@ -50,7 +50,7 @@ Where:
 Therefore, this implementation avoids recomputing the indicator over all
 the input data every time it's updated. All parameters are defined at
 compile time. Finally, memory is only statically allocated. All these
-features make indicators highly CPU and memory efficient.
+features make indicator processing highly CPU and memory efficient.
 
 
 Example:
