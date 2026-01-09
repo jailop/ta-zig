@@ -1,6 +1,6 @@
 # Zig Library for Technical Analysis
 
-Documentation: <https://datainquiry.github.io/ta-zig/>
+Documentation: <https://jailop.github.io/ta-zig/>
 
 I'm just starting. At this moment I have implemented a few technical
 analysis indicators for streaming data:
